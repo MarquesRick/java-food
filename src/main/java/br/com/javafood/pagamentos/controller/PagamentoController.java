@@ -42,7 +42,7 @@ public class PagamentoController {
         return ResponseEntity.created(uri).body(pagamento);
     }
 
-    @PutMapping
+    @PutMapping("/{id}")
     public ResponseEntity<PagamentoDto> update(@PathVariable @NotNull Long id, @RequestBody @Valid PagamentoDto dto){
         PagamentoDto updated = service.update(id, dto);
         return ResponseEntity.ok(updated);
