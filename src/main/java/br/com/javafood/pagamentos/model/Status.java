@@ -1,4 +1,4 @@
-package br.com.javafood.pagamentos.Model;
+package br.com.javafood.pagamentos.model;
 
 public enum Status {
     CRIADO,
