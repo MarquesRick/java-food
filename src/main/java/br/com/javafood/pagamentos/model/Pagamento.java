@@ -11,10 +11,10 @@ import java.math.BigDecimal;
 
 @Entity
 @Table(name = "pagamentos")
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
+@Getter //lombrok - not needs to create getters
+@Setter //lombrok - not needs to create setters
+@AllArgsConstructor //lombrok - not needs to create a contructor - AllArgs: Create a constructor with all args
+@NoArgsConstructor //lombrok - not needs to create a contructor - AllArgs: Create a constructor with none args
 public class Pagamento {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
