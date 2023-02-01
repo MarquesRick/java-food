@@ -32,7 +32,9 @@ public class PagamentoService {
     public PagamentoDto getById(Long id){
         Pagamento pagamento = _repository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException());
-        return _modelMapper.map(pagamento, PagamentoDto.class);
+        var dto = _modelMapper.map(pagamento, PagamentoDto.class);
+        dto.setItens(pedido.obterItensDoPedido(pagamento.getPedidoId()).getItens());
+        return dto;
     }
 
     public PagamentoDto create(PagamentoDto dto){
