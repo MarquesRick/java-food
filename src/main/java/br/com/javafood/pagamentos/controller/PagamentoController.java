@@ -3,6 +3,7 @@ package br.com.javafood.pagamentos.controller;
 import br.com.javafood.pagamentos.dto.PagamentoDto;
 import br.com.javafood.pagamentos.model.Pagamento;
 import br.com.javafood.pagamentos.service.PagamentoService;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -52,6 +53,16 @@ public class PagamentoController {
     public ResponseEntity<PagamentoDto> delete(@PathVariable @NotNull Long id){
         service.delete(id);
         return ResponseEntity.noContent().build(); //returns OK but no content
+    }
+
+    @PatchMapping("/{id}/confirm")
+    @CircuitBreaker(name = "atualizaPedido", fallbackMethod = "pagamentoIntegracaoPendente")
+    public void confirmPayment(@PathVariable @NotNull Long id){
+        service.confirmPayment(id);
+    }
+
+    public void pagamentoIntegracaoPendente(Long id, Exception e){
+        service.changeStatus(id);
     }
 
 

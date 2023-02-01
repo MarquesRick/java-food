@@ -1,6 +1,7 @@
 package br.com.javafood.pagamentos.service;
 
 import br.com.javafood.pagamentos.dto.PagamentoDto;
+import br.com.javafood.pagamentos.http.PedidoClient;
 import br.com.javafood.pagamentos.model.Pagamento;
 import br.com.javafood.pagamentos.model.Status;
 import br.com.javafood.pagamentos.repository.PagamentoRepository;
@@ -11,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
+import java.util.Optional;
 
 @Service
 public class PagamentoService {
@@ -18,6 +20,8 @@ public class PagamentoService {
     private PagamentoRepository _repository;
     @Autowired
     private ModelMapper _modelMapper;
+    @Autowired
+    private PedidoClient pedido;
 
     public Page<PagamentoDto> getAll(Pageable pagination){
         return _repository
@@ -50,5 +54,28 @@ public class PagamentoService {
     public void delete(Long id){
         _repository.deleteById(id);
     }
+
+    public void confirmPayment(Long id){
+        Optional<Pagamento> pagamento = _repository.findById(id);
+
+        if(!pagamento.isPresent())
+            throw new EntityNotFoundException();
+
+        pagamento.get().setStatus(Status.CONFIRMADO);
+        _repository.save(pagamento.get());
+        pedido.atualizarPagamento(pagamento.get().getPedidoId());
+    }
+
+    public void changeStatus(Long id){
+        Optional<Pagamento> pagamento = _repository.findById(id);
+
+        if(!pagamento.isPresent())
+            throw new EntityNotFoundException();
+
+        pagamento.get().setStatus(Status.CONFIRMADO_SEM_INTEGRACAO);
+        _repository.save(pagamento.get());
+    }
+
+
 
 }
