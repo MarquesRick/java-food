@@ -4,6 +4,8 @@ import br.com.javafood.pagamentos.dto.PagamentoDto;
 import br.com.javafood.pagamentos.model.Pagamento;
 import br.com.javafood.pagamentos.service.PagamentoService;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import org.springframework.amqp.core.Message;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -21,6 +23,8 @@ import java.net.URI;
 public class PagamentoController {
     @Autowired
     private PagamentoService service;
+    @Autowired
+    private RabbitTemplate rabbitTemplate;
     @GetMapping //if you don't pass any parameter, this method returns on get request
     public Page<PagamentoDto> get(@PageableDefault(size = 10) Pageable pagination){
         return service.getAll(pagination);
@@ -40,6 +44,8 @@ public class PagamentoController {
         //returns the status created + the updated obj calling method get (/pagamentos/{id})
         URI uri = uriBuilder.path("/pagamentos/{id}").buildAndExpand(pagamento.getId()).toUri();
 
+        Message message = new Message(("Created payment ID: " + pagamento.getId()).getBytes());
+        rabbitTemplate.send("payment_done", message);
         return ResponseEntity.created(uri).body(pagamento);
     }
 
