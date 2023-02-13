@@ -44,7 +44,7 @@ public class PagamentoController {
         //returns the status created + the updated obj calling method get (/pagamentos/{id})
         URI uri = uriBuilder.path("/pagamentos/{id}").buildAndExpand(pagamento.getId()).toUri();
 
-        Message message = new Message(("Created payment ID: " + pagamento.getId()).getBytes());
+        //Message message = new Message(("Created payment ID: " + pagamento.getId()).getBytes());
         //rabbitTemplate.send("payment_done", message);
 
         //convert to dto and send to rabbit

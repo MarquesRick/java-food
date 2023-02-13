@@ -38,7 +38,7 @@ public class PagamentoAMQPConfiguration {
 
     @Bean
     public RabbitTemplate rabbitTemplate(ConnectionFactory connectionFactory, Jackson2JsonMessageConverter msgConverter){
-        RabbitTemplate rabbitTemplate = new RabbitTemplate();
+        RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
         rabbitTemplate.setMessageConverter(msgConverter);
         return rabbitTemplate;
     }
