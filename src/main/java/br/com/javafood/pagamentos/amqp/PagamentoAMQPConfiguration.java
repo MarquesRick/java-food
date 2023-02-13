@@ -1,5 +1,6 @@
 package br.com.javafood.pagamentos.amqp;
 
+import org.springframework.amqp.core.FanoutExchange;
 import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.core.QueueBuilder;
 import org.springframework.amqp.rabbit.core.RabbitAdmin;
@@ -42,4 +43,11 @@ public class PagamentoAMQPConfiguration {
         rabbitTemplate.setMessageConverter(msgConverter);
         return rabbitTemplate;
     }
+
+    //create exchange
+    @Bean
+    public FanoutExchange fanoutExchange(){
+        return new FanoutExchange("payment_exchange");
+    }
+
 }

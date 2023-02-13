@@ -47,8 +47,11 @@ public class PagamentoController {
         //Message message = new Message(("Created payment ID: " + pagamento.getId()).getBytes());
         //rabbitTemplate.send("payment_done", message);
 
-        //convert to dto and send to rabbit
-        rabbitTemplate.convertAndSend("payment_done", pagamento);
+        //convert to dto and send to rabbit - queue
+        //rabbitTemplate.convertAndSend("payment_done", pagamento);
+
+        //convert to dto and send to rabbit - exchange
+        rabbitTemplate.convertAndSend("payment_exchange", "", pagamento);
         return ResponseEntity.created(uri).body(pagamento);
     }
 
